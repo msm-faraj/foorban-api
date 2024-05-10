@@ -28,31 +28,12 @@ export class UpdateInfoRequest implements UpdateInfoRequestInterface {
   age: number;
 
   @IsBoolean()
-  @ValidateIf((o) => o.age && o.age > 18)
+  @ValidateIf((o) => o?.age > 18)
   @IsNotEmpty()
   married: boolean;
 
   @IsNotEmpty()
   @Transform((o) => new Date(o.obj.dateOfBirth))
-  @ValidateIf((o) => {
-    const age = o.age;
-    const today = new Date();
-    const currentYear = today.getFullYear();
-    const minBirthYear = currentYear - age - 1;
-    const maxBirthYear = currentYear - age;
-    const minDate = new Date(
-      minBirthYear,
-      today.getMonth(),
-      today.getDate() + 1,
-    );
-    const maxDate = new Date(
-      maxBirthYear,
-      today.getMonth(),
-      today.getDate() + 1,
-    );
-    const birthDay = new Date(o.dateOfBirth);
-    return birthDay < minDate || birthDay > maxDate;
-  })
   @Validate(AgeValidator)
   dateOfBirth: string;
 }

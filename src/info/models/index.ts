@@ -1,39 +1,20 @@
-import { Transform } from 'class-transformer';
 import { UpdateInfoRequest as UpdateInfoRequestInterface } from '../interfaces';
 import { Validate } from 'class-validator';
+import { NameValidator } from './NameValidator';
 import { AgeValidator } from './AgeValidator';
-import {
-  IsBoolean,
-  IsInt,
-  IsNotEmpty,
-  IsString,
-  Max,
-  MaxLength,
-  Min,
-  MinLength,
-  ValidateIf,
-} from 'class-validator';
+import { MarriedValidator } from './MarriedValidator';
+import { DateValidatr } from './DateValidator';
 
 export class UpdateInfoRequest implements UpdateInfoRequestInterface {
-  @IsNotEmpty()
-  @IsString()
-  @MinLength(5)
-  @MaxLength(50)
+  @Validate(NameValidator)
   name: string;
 
-  @IsNotEmpty()
-  @IsInt()
-  @Min(1)
-  @Max(150)
+  @Validate(AgeValidator)
   age: number;
 
-  @IsBoolean()
-  @ValidateIf((o) => o?.age > 18)
-  @IsNotEmpty()
+  @Validate(MarriedValidator)
   married: boolean;
 
-  @IsNotEmpty()
-  @Transform((o) => new Date(o.obj.dateOfBirth))
-  @Validate(AgeValidator)
+  @Validate(DateValidatr)
   dateOfBirth: string;
 }
